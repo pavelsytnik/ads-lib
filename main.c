@@ -6,18 +6,27 @@ typedef struct node {
     struct node* next;
 } node_t;
 
-void push_front(node_t** head_ref, int value) {
+node_t* create_node(int value) {
     node_t* node = malloc(sizeof(node_t));
+    if (!node) {
+        return NULL;
+    }
+    node->value = value;
+    node->next = NULL;
+    return node;
+}
+
+void push_front(node_t** head_ref, int value) {
+    node_t* node = create_node(value);
     if (!node) {
         return;
     }
-    node->value = value;
     node->next = *head_ref;
     *head_ref = node;
 }
 
 void push_back(node_t** head_ref, int value) {
-    node_t* new_node = malloc(sizeof(node_t));
+    node_t* new_node = create_node(value);
     if (!new_node) {
         return;
     }
@@ -26,8 +35,6 @@ void push_back(node_t** head_ref, int value) {
         node = node->next;
     }
     node->next = new_node;
-    new_node->value = value;
-    new_node->next = NULL;
 }
 
 void print_list(node_t* head) {
