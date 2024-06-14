@@ -16,6 +16,20 @@ void push_front(node_t** head_ref, int value) {
     *head_ref = node;
 }
 
+void push_back(node_t** head_ref, int value) {
+    node_t* new_node = malloc(sizeof(node_t));
+    if (!new_node) {
+        return;
+    }
+    node_t* node = *head_ref;
+    while (node->next) {
+        node = node->next;
+    }
+    node->next = new_node;
+    new_node->value = value;
+    new_node->next = NULL;
+}
+
 void print_list(node_t* head) {
     printf("</\n");
     node_t* node = head;
@@ -30,6 +44,8 @@ int main(void) {
     node_t* head = NULL;
     push_front(&head, 0);
     push_front(&head, 1);
+    push_back(&head, 5);
+    push_back(&head, 7);
     print_list(head);
     return 0;
 }
