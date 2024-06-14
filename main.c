@@ -30,6 +30,10 @@ void push_back(node_t** head_ref, int value) {
     if (!new_node) {
         return;
     }
+    if (!*head_ref) {
+        *head_ref = new_node;
+        return;
+    }
     node_t* node = *head_ref;
     while (node->next) {
         node = node->next;
@@ -58,6 +62,7 @@ void print_list(node_t* head) {
 
 int main(void) {
     node_t* head = NULL;
+    push_back(&head, 9);
     push_front(&head, 0);
     push_front(&head, 1);
     push_back(&head, 5);
