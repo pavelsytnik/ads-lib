@@ -37,6 +37,15 @@ void push_back(node_t** head_ref, int value) {
     node->next = new_node;
 }
 
+void destroy_list(node_t* head) {
+    while (head) {
+        node_t* temp = head->next;
+        free(head);
+        printf("-\n");
+        head = temp;
+    }
+}
+
 void print_list(node_t* head) {
     printf("</\n");
     node_t* node = head;
@@ -54,5 +63,7 @@ int main(void) {
     push_back(&head, 5);
     push_back(&head, 7);
     print_list(head);
+    destroy_list(head);
+    head = NULL;
     return 0;
 }
