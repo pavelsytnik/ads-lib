@@ -110,6 +110,18 @@ void delete(node_t** head_ref, int pos) {
     node->next = temp;
 }
 
+// The following code has undefined behavior if the position is out of the bounds
+int get(node_t* head, int pos) {
+    if (pos < 0) {
+        return;
+    }
+    node_t* node = head;
+    for (int i = 0; i < pos; ++i) {
+        node = node->next;
+    }
+    return node->value;
+}
+
 void destroy_list(node_t* head) {
     while (head) {
         node_t* temp = head->next;
@@ -143,6 +155,7 @@ int main(void) {
     insert(&head, 4, 777);
     delete(&head, 1);
     print_list(head);
+    printf("Element: %d\n", get(head, 3));
     destroy_list(head);
     head = NULL;
     return 0;
