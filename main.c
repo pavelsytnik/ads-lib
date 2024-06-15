@@ -87,6 +87,29 @@ void remove_back(node_t** head_ref) {
     node->next = NULL;
 }
 
+void delete(node_t** head_ref, int pos) {
+    if (pos < 0) {
+        return;
+    }
+    if (pos == 0) {
+        remove_front(head_ref);
+        return;
+    }
+    node_t* node = *head_ref;
+    for (int i = 1; i < pos; ++i) {
+        if (!node) {
+            return;
+        }
+        node = node->next;
+    }
+    if (!node->next) {
+        return;
+    }
+    node_t* temp = node->next->next;
+    free(node->next);
+    node->next = temp;
+}
+
 void destroy_list(node_t* head) {
     while (head) {
         node_t* temp = head->next;
@@ -118,6 +141,7 @@ int main(void) {
     remove_back(&head);
     insert(&head, 2, 666);
     insert(&head, 4, 777);
+    delete(&head, 1);
     print_list(head);
     destroy_list(head);
     head = NULL;
