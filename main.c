@@ -122,6 +122,23 @@ int get(node_t* head, int pos) {
     return node->value;
 }
 
+void set(node_t* head, int pos, int value) {
+    if (pos < 0) {
+        return;
+    }
+    node_t* node = head;
+    for (int i = 0; i < pos; ++i) {
+        if (!node) {
+            return;
+        }
+        node = node->next;
+    }
+    if (!node) {
+        return;
+    }
+    node->value = value;
+}
+
 void destroy_list(node_t* head) {
     while (head) {
         node_t* temp = head->next;
@@ -155,6 +172,7 @@ int main(void) {
     insert(&head, 4, 777);
     delete(&head, 1);
     print_list(head);
+    set(head, 3, 1408);
     printf("Element: %d\n", get(head, 3));
     destroy_list(head);
     head = NULL;
