@@ -41,6 +41,26 @@ void push_back(node_t** head_ref, int value) {
     node->next = new_node;
 }
 
+void insert(node_t** head_ref, int pos, int value) {
+    if (pos < 0) {
+        return;
+    }
+    node_t* node = *head_ref;
+    if (pos == 0) {
+        push_front(&node, value);
+        return;
+    }
+    for (int i = 1; i < pos; ++i) {
+        if (!node) {
+            return;
+        }
+        node = node->next;
+    }
+    node_t* new_node = create_node(value);
+    new_node->next = node->next;
+    node->next = new_node;
+}
+
 void remove_front(node_t** head_ref) {
     if (!*head_ref) {
         return;
@@ -96,6 +116,8 @@ int main(void) {
     print_list(head);
     remove_front(&head);
     remove_back(&head);
+    insert(&head, 2, 666);
+    insert(&head, 4, 777);
     print_list(head);
     destroy_list(head);
     head = NULL;
