@@ -1,8 +1,10 @@
 #include <stdio.h>
 
 #include "linkedlist.h"
+#include "stack.h"
 
 int main(void) {
+
     linkedlist_t* list = NULL;
     initialize_list(&list);
     push_back(list, 9);
@@ -24,5 +26,14 @@ int main(void) {
     printf("Size: %d\n", list_size(list));
     free(list);
     list = NULL;
+
+    stack_t stck = NULL;
+    create_stack(&stck);
+    push(stck, 5);
+    push(stck, 7);
+    printf("\nStack size: %d\n", stack_size(stck));
+    printf("Top element: %d\n", peek(stck));
+    destroy_stack(&stck);
+
     return 0;
 }
