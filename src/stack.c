@@ -31,6 +31,11 @@ int stack_size(stack_t stck) {
     return stck->size;
 }
 
+void shrink(stack_t stck) {
+    stck->arr = realloc(stck->arr, sizeof(int) * stck->size);
+    stck->reserved = stck->size;
+}
+
 int peek(stack_t stck) {
     return stck->arr[stck->size - 1];
 }
