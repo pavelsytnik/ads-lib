@@ -31,7 +31,15 @@ int main(void) {
     create_stack(&stck);
     push(stck, 5);
     push(stck, 7);
+    push(stck, 7);
+    push(stck, 7);
+    push(stck, 7);
+    push(stck, 7);
+    push(stck, 7);
+    push(stck, 7);
+    push(stck, 7);
     printf("\nStack size: %d\n", stack_size(stck));
+    printf("Reserved size: %d\n", stack_reserved_space(stck));
     printf("Top element: %d\n", peek(stck));
     destroy_stack(&stck);
 
