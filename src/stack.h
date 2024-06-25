@@ -1,17 +1,17 @@
 #ifndef STACK_H
 #define STACK_H
 
-typedef struct stack* stack_t;
+typedef struct stack stack;
 
-void create_stack(stack_t* stck);
-void destroy_stack(stack_t* stck);
+void stack_destroy(stack** stck);
+void stack_destroy(stack** stck);
 
-int stack_reserved_space(stack_t stck);
-void shrink(stack_t stck);
-int stack_size(stack_t stck);
+int stack_reserved_space(stack* stck);
+void stack_shrink(stack* stck);
+int stack_size(stack* stck);
 
-int peek(stack_t stck);
-int pop(stack_t stck);
-void push(stack_t stck, int value);
+int stack_peek(stack* stck);
+int stack_pop(stack* stck);
+void stack_push(stack* stck, int value);
 
 #endif

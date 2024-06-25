@@ -1,23 +1,23 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
-typedef struct linkedlist linkedlist_t;
+typedef struct linked_list linked_list;
 
-void initialize_list(linkedlist_t** list_ptr);
-void destroy_list(linkedlist_t* list);
+void linked_list_initialize(linked_list** list_ptr);
+void linked_list_destroy(linked_list* list);
 
-int list_size(linkedlist_t* list);
-void print_list(linkedlist_t* list);
+int linked_list_size(linked_list* list);
+void linked_list_print(linked_list* list);
 
-void push_front(linkedlist_t* list, int value);
-void push_back(linkedlist_t* list, int value);
-void insert(linkedlist_t* list, int pos, int value);
+void linked_list_push_front(linked_list* list, int value);
+void linked_list_push_back(linked_list* list, int value);
+void linked_list_insert(linked_list* list, int pos, int value);
 
-void remove_front(linkedlist_t* list);
-void remove_back(linkedlist_t* list);
-void delete(linkedlist_t* list, int pos);
+void linked_list_remove_front(linked_list* list);
+void linked_list_remove_back(linked_list* list);
+void linked_list_delete(linked_list* list, int pos);
 
-int get(linkedlist_t* list, int pos);
-void set(linkedlist_t* list, int pos, int value);
+int linked_list_get(linked_list* list, int pos);
+void linked_list_set(linked_list* list, int pos, int value);
 
 #endif

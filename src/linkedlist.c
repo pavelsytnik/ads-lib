@@ -6,25 +6,25 @@
 typedef struct node {
     int value;
     struct node* next;
-} node_t;
+} node;
 
-struct linkedlist {
-    node_t* head;
+struct linked_list {
+    struct node* head;
     int size;
 };
 
-void initialize_list(linkedlist_t** list_ptr) {
-    *list_ptr = malloc(sizeof(linkedlist_t));
+void linked_list_initialize(linked_list** list_ptr) {
+    *list_ptr = malloc(sizeof(linked_list));
     (*list_ptr)->head = NULL;
     (*list_ptr)->size = 0;
 }
 
-int list_size(linkedlist_t* list) {
+int linked_list_size(linked_list* list) {
     return list->size;
 }
 
-node_t* create_node(int value) {
-    node_t* node = malloc(sizeof(node_t));
+node* node_create(int value) {
+    node* node = malloc(sizeof(struct node));
     if (!node) {
         return NULL;
     }
@@ -33,8 +33,8 @@ node_t* create_node(int value) {
     return node;
 }
 
-void push_front(linkedlist_t* list, int value) {
-    node_t* node = create_node(value);
+void linked_list_push_front(linked_list* list, int value) {
+    node* node = node_create(value);
     if (!node) {
         return;
     }
@@ -43,8 +43,8 @@ void push_front(linkedlist_t* list, int value) {
     list->size++;
 }
 
-void push_back(linkedlist_t* list, int value) {
-    node_t* new_node = create_node(value);
+void linked_list_push_back(linked_list* list, int value) {
+    node* new_node = node_create(value);
     if (!new_node) {
         return;
     }
@@ -53,7 +53,7 @@ void push_back(linkedlist_t* list, int value) {
         list->size++;
         return;
     }
-    node_t* node = list->head;
+    node* node = list->head;
     while (node->next) {
         node = node->next;
     }
@@ -61,38 +61,38 @@ void push_back(linkedlist_t* list, int value) {
     list->size++;
 }
 
-void insert(linkedlist_t* list, int pos, int value) {
+void linked_list_insert(linked_list* list, int pos, int value) {
     if (pos < 0) {
         return;
     }
     if (pos == 0) {
-        push_front(list, value);
+        linked_list_push_front(list, value);
         return;
     }
-    node_t* node = list->head;
+    node* node = list->head;
     for (int i = 1; i < pos; ++i) {
         if (!node) {
             return;
         }
         node = node->next;
     }
-    node_t* new_node = create_node(value);
+    struct node* new_node = node_create(value);
     new_node->next = node->next;
     node->next = new_node;
     list->size++;
 }
 
-void remove_front(linkedlist_t* list) {
+void linked_list_remove_front(linked_list* list) {
     if (!list->head) {
         return;
     }
-    node_t* new_head = list->head->next;
+    struct node* new_head = list->head->next;
     free(list->head);
     list->head = new_head;
     list->size--;
 }
 
-void remove_back(linkedlist_t* list) {
+void linked_list_remove_back(linked_list* list) {
     if (!list->head) {
         return;
     }
@@ -102,7 +102,7 @@ void remove_back(linkedlist_t* list) {
         list->size--;
         return;
     }
-    node_t* node = list->head;
+    node* node = list->head;
     while (node->next->next) {
         node = node->next;
     }
@@ -111,15 +111,15 @@ void remove_back(linkedlist_t* list) {
     list->size--;
 }
 
-void delete(linkedlist_t* list, int pos) {
+void linked_list_delete(linked_list* list, int pos) {
     if (pos < 0) {
         return;
     }
     if (pos == 0) {
-        remove_front(list);
+        linked_list_remove_front(list);
         return;
     }
-    node_t* node = list->head;
+    node* node = list->head;
     for (int i = 1; i < pos; ++i) {
         if (!node) {
             return;
@@ -129,29 +129,29 @@ void delete(linkedlist_t* list, int pos) {
     if (!node->next) {
         return;
     }
-    node_t* temp = node->next->next;
+    struct node* temp = node->next->next;
     free(node->next);
     node->next = temp;
     list->size--;
 }
 
 // The following code has undefined behavior if the position is out of the bounds
-int get(linkedlist_t* list, int pos) {
+int linked_list_get(linked_list* list, int pos) {
     if (pos < 0) {
         return;
     }
-    node_t* node = list->head;
+    node* node = list->head;
     for (int i = 0; i < pos; ++i) {
         node = node->next;
     }
     return node->value;
 }
 
-void set(linkedlist_t* list, int pos, int value) {
+void linked_list_set(linked_list* list, int pos, int value) {
     if (pos < 0) {
         return;
     }
-    node_t* node = list->head;
+    node* node = list->head;
     for (int i = 0; i < pos; ++i) {
         if (!node) {
             return;
@@ -164,9 +164,9 @@ void set(linkedlist_t* list, int pos, int value) {
     node->value = value;
 }
 
-void destroy_list(linkedlist_t* list) {
+void linked_list_destroy(linked_list* list) {
     while (list->head) {
-        node_t* temp = list->head->next;
+        node* temp = list->head->next;
         free(list->head);
         printf("-\n");
         list->head = temp;
@@ -175,9 +175,9 @@ void destroy_list(linkedlist_t* list) {
     list->size = 0;
 }
 
-void print_list(linkedlist_t* list) {
+void linked_list_print(linked_list* list) {
     printf("</\n");
-    node_t* node = list->head;
+    node* node = list->head;
     while (node) {
         printf("  %d\n", node->value);
         node = node->next;
