@@ -3,6 +3,7 @@
 
 #include "linkedlist.h"
 #include "stack.h"
+#include "vector.h"
 
 int main(void) {
 
@@ -46,6 +47,17 @@ int main(void) {
     printf("Reserved size: %d\n", stack_reserved_space(stck));
     printf("Top element: %d\n", stack_peek(stck));
     stack_destroy(&stck);
+
+    struct vector *v = vector_create();
+    vector_push_back(v, 1);
+    vector_push_back(v, 3);
+    vector_push_back(v, 5);
+    printf("\nVector size: %d\n", vector_size(v));
+    vector_clear(v);
+    vector_shrink(v);
+    vector_reserve(v, 1);
+    vector_push_back(v, 666);
+    printf("Vector capacity: %d\n", vector_capacity(v));
 
     return 0;
 }
