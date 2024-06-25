@@ -17,4 +17,7 @@ void vector_insert(struct vector *vec, int pos, int val);
 void vector_push_back(struct vector *vec, int val);
 void vector_pop_back(struct vector *vec);
 
+void vector_set(struct vector *vec, int pos, int val);
+int vector_get(struct vector *vec, int pos);
+
 #endif

@@ -58,6 +58,7 @@ int main(void) {
     vector_reserve(v, 1);
     vector_push_back(v, 666);
     printf("Vector capacity: %d\n", vector_capacity(v));
+    printf("%d\n", vector_get(v, 0));
 
     return 0;
 }

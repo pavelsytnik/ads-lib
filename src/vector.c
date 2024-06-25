@@ -96,3 +96,19 @@ void vector_pop_back(struct vector *vec)
 
     vec->size--;
 }
+
+void vector_set(struct vector *vec, int pos, int val)
+{
+    if (pos < 0 || pos >= vec->size)
+        return;
+
+    vec->array[pos] = val;
+}
+
+int vector_get(struct vector *vec, int pos)
+{
+    if (pos < 0 || pos >= vec->size)
+        return;
+
+    return vec->array[pos];
+}
