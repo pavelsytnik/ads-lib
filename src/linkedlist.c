@@ -8,10 +8,10 @@ typedef struct node {
     struct node* next;
 } node;
 
-struct linked_list {
+typedef struct linked_list {
     struct node* head;
     int size;
-};
+} linked_list;
 
 void linked_list_initialize(linked_list** list_ptr) {
     *list_ptr = malloc(sizeof(linked_list));
@@ -23,7 +23,7 @@ int linked_list_size(linked_list* list) {
     return list->size;
 }
 
-node* node_create(int value) {
+static node* node_create(int value) {
     node* node = malloc(sizeof(struct node));
     if (!node) {
         return NULL;

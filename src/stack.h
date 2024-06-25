@@ -3,7 +3,7 @@
 
 typedef struct stack stack;
 
-void stack_destroy(stack** stck);
+void stack_create(stack** stck);
 void stack_destroy(stack** stck);
 
 int stack_reserved_space(stack* stck);

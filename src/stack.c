@@ -45,7 +45,7 @@ int stack_pop(stack* stck) {
     return stck->arr[stck->size];
 }
 
-void reserve(stack* stck, int i) {
+static void reserve(stack* stck, int i) {
     if (stck->reserved == 0) {
         stck->arr = malloc(sizeof(int) * i);
     } else {
