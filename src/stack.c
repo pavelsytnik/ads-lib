@@ -76,12 +76,17 @@ void stack_shrink(struct stack *stck)
     stck->capacity = stck->size;
 }
 
+void stack_clear(struct stack *stck)
+{
+    stck->size == 0;
+}
+
 void stack_push(struct stack *stck, int val)
 {
     if (stck->capacity == 0)
-        vector_reserve(stck, 8);
+        stack_reserve(stck, 8);
     else if (stck->capacity == stck->size)
-        vector_reserve(stck, 2 * stck->capacity);
+        stack_reserve(stck, 2 * stck->capacity);
 
     stck->array[stck->size] = val;
     stck->size++;
