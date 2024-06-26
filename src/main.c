@@ -29,24 +29,25 @@ int main(void) {
     free(list);
     list = NULL;
 
-    stack* stck = NULL;
-    stack_create(&stck);
+    struct stack *stck = stack_create();
     stack_push(stck, 5);
     stack_push(stck, 7);
-    stack_push(stck, 7);
-    stack_push(stck, 7);
-    stack_push(stck, 7);
-    stack_push(stck, 7);
-    stack_push(stck, 7);
-    stack_push(stck, 7);
-    stack_push(stck, 7);
+    stack_push(stck, 8);
+    stack_push(stck, 9);
+    stack_push(stck, 10);
+    stack_push(stck, 12);
+    stack_push(stck, 85);
+    stack_push(stck, 77);
+    stack_push(stck, 896);
     printf("\nStack size: %d\n", stack_size(stck));
     stack_shrink(stck);
     stack_push(stck, 15);
     stack_push(stck, 27);
-    printf("Reserved size: %d\n", stack_reserved_space(stck));
-    printf("Top element: %d\n", stack_peek(stck));
-    stack_destroy(&stck);
+    printf("Reserved size: %d\n", stack_capacity(stck));
+    printf("Top element: %d\n", stack_pop(stck));
+    printf("Top element: %d\n", stack_pop(stck));
+    stack_destroy(stck);
+    stck = NULL;
 
     struct vector *v = vector_create();
     vector_push_back(v, 1);

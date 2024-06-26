@@ -1,65 +1,101 @@
-// Following code doesn't contain error detecting and error handling
+#include <stdlib.h>
 
 #include "stack.h"
 
-#include <stdlib.h>
-
-typedef struct stack {
+struct stack {
+    int *array;
     int size;
-    int reserved;
-    int* arr;
-} stack;
+    int capacity;
+};
 
-void stack_create(stack** stck) {
-    *stck = malloc(sizeof(struct stack));
-    (*stck)->size = 0;
-    (*stck)->reserved = 0;
-    (*stck)->arr = NULL;
+struct stack *stack_create()
+{
+    struct stack *stck = malloc(sizeof(struct stack));
+    if (!stck)
+        return NULL;
+
+    stck->array = NULL;
+    stck->size = 0;
+    stck->capacity = 0;
+
+    return stck;
 }
 
-void stack_destroy(stack** stck) {
-    free((*stck)->arr);
-    free(*stck);
-    *stck = NULL;
+void stack_destroy(struct stack *stck)
+{
+    free(stck->array);
+    free(stck);
 }
 
-int stack_reserved_space(stack* stck) {
-    return stck->reserved;
+int stack_is_empty(struct stack *stck)
+{
+    return stck->size == 0;
 }
 
-int stack_size(stack* stck) {
+int stack_size(struct stack *stck)
+{
     return stck->size;
 }
 
-void stack_shrink(stack* stck) {
-    stck->arr = realloc(stck->arr, sizeof(int) * stck->size);
-    stck->reserved = stck->size;
+int stack_capacity(struct stack *stck)
+{
+    return stck->capacity;
 }
 
-int stack_peek(stack* stck) {
-    return stck->arr[stck->size - 1];
+void stack_reserve(struct stack *stck, int new_cap)
+{
+    if (new_cap <= stck->capacity)
+        return;
+
+    int *new_array = realloc(stck->array, new_cap * sizeof(struct stack));
+    if (!new_array)
+        return;
+
+    stck->array = new_array;
+    stck->capacity = new_cap;
 }
 
-int stack_pop(stack* stck) {
-    stck->size--;
-    return stck->arr[stck->size];
-}
+void stack_shrink(struct stack *stck)
+{
+    if (stck->size == stck->capacity)
+        return;
 
-static void reserve(stack* stck, int i) {
-    if (stck->reserved == 0) {
-        stck->arr = malloc(sizeof(int) * i);
+    int *new_mem;
+
+    if (stck->size == 0) {
+        new_mem = NULL;
+        free(stck->array);
+
     } else {
-        stck->arr = realloc(stck->arr, sizeof(int) * i);
+        new_mem = realloc(stck->array, stck->size * sizeof(struct stack));
+        if (!new_mem)
+            return;
     }
-    stck->reserved = i;
+
+    stck->array = new_mem;
+    stck->capacity = stck->size;
 }
 
-void stack_push(stack* stck, int value) {
-    if (stck->reserved == 0) {
-        reserve(stck, 8);
-    } else if (stck->reserved == stck->size) {
-        reserve(stck, stck->size * 2);
-    }
-    stck->arr[stck->size] = value;
+void stack_push(struct stack *stck, int val)
+{
+    if (stck->capacity == 0)
+        vector_reserve(stck, 8);
+    else if (stck->capacity == stck->size)
+        vector_reserve(stck, 2 * stck->capacity);
+
+    stck->array[stck->size] = val;
     stck->size++;
+}
+
+int stack_pop(struct stack *stck)
+{
+    if (stck->size == 0)
+        return;
+
+    return stck->array[stck->size-- - 1];
+}
+
+int stack_peek(struct stack *stck)
+{
+    return stck->array[stck->size - 1];
 }

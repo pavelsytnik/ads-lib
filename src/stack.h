@@ -1,17 +1,20 @@
 #ifndef STACK_H
 #define STACK_H
 
-typedef struct stack stack;
+struct stack;
 
-void stack_create(stack** stck);
-void stack_destroy(stack** stck);
+struct stack *stack_create();
+void stack_destroy(struct stack *stck);
 
-int stack_reserved_space(stack* stck);
-void stack_shrink(stack* stck);
-int stack_size(stack* stck);
+int stack_is_empty(struct stack *stck);
+int stack_size(struct stack *stck);
+int stack_capacity(struct stack *stck);
+void stack_reserve(struct stack *stck, int new_cap);
+void stack_shrink(struct stack *stck);
 
-int stack_peek(stack* stck);
-int stack_pop(stack* stck);
-void stack_push(stack* stck, int value);
+void stack_clear(struct stack *stck);
+void stack_push(struct stack *stck, int val);
+int stack_pop(struct stack *stck);
+int stack_peek(struct stack *stck);
 
 #endif
