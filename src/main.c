@@ -7,26 +7,21 @@
 
 int main(void) {
 
-    linked_list* list = NULL;
-    linked_list_initialize(&list);
+    struct linked_list *list = linked_list_create();
     linked_list_push_back(list, 9);
     linked_list_push_front(list, 0);
     linked_list_push_front(list, 1);
     linked_list_push_back(list, 5);
     linked_list_push_back(list, 7);
-    linked_list_print(list);
-    linked_list_remove_front(list);
-    linked_list_remove_back(list);
+    linked_list_pop_front(list);
+    linked_list_pop_back(list);
     linked_list_insert(list, 2, 666);
     linked_list_insert(list, 4, 777);
-    linked_list_delete(list, 1);
-    linked_list_print(list);
+    linked_list_erase(list, 1);
     linked_list_set(list, 3, 1408);
     printf("Element: %d\n", linked_list_get(list, 3));
     printf("Size: %d\n", linked_list_size(list));
     linked_list_destroy(list);
-    printf("Size: %d\n", linked_list_size(list));
-    free(list);
     list = NULL;
 
     struct stack *stck = stack_create();
