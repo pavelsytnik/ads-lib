@@ -165,3 +165,22 @@ int linked_list_back(struct linked_list *list)
 {
     return linked_list_get(list, list->size - 1);
 }
+
+void linked_list_reverse(struct linked_list *list)
+{
+    if (list->size < 2)
+        return;
+
+    struct node *prev = NULL;
+    struct node *curr = list->head;
+    struct node *next = NULL;
+
+    while (curr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+
+    list->head = prev;
+}

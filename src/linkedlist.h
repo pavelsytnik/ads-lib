@@ -23,4 +23,6 @@ void linked_list_set(struct linked_list *list, int pos, int val);
 int linked_list_front(struct linked_list *list);
 int linked_list_back(struct linked_list *list);
 
+void linked_list_reverse(struct linked_list *list);
+
 #endif
