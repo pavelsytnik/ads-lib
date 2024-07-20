@@ -1,33 +1,20 @@
+/* UNIVERSAL VECTOR TEST */
+
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "linkedlist.h"
-#include "stack.h"
 #include "vector.h"
 
 int main(void)
 {
-    struct linked_list *list = linked_list_create();
+    short *vec = vector_create();
 
-    linked_list_push_back(list, 0);
-    linked_list_push_back(list, 1);
-    linked_list_push_back(list, 2);
-    linked_list_push_back(list, 3);
-    linked_list_push_back(list, 4);
+    printf("Is empty: %d\n", vector_is_empty(vec));
+    printf("Size: %d\n", vector_size(vec));
+    printf("Capacity: %d\n", vector_capacity(vec));
 
-    for (int i = 0; i < linked_list_size(list); i++) {
-        printf("%d ", linked_list_get(list, i));
-    }
-    printf("\n");
-
-    linked_list_reverse(list);
-
-    for (int i = 0; i < linked_list_size(list); i++) {
-        printf("%d ", linked_list_get(list, i));
-    }
-
-    linked_list_destroy(list);
-    list = NULL;
+    vector_destroy(vec);
+    vec = NULL;
 
     return 0;
 }
