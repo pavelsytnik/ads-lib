@@ -14,6 +14,9 @@ struct vector_header {
 #define vector_begin(metadata) \
     ((struct vector_header*)metadata + 1)
 
+#define vector_size_for(type, capacity) \
+    (sizeof(struct vector_header) + capacity * sizeof(type))
+
 #define vector_create(vector) do {                                         \
                                                                            \
     struct vector_header *metadata = malloc(sizeof(struct vector_header)); \
@@ -26,19 +29,19 @@ struct vector_header {
     vector = vector_begin(metadata);                                       \
 } while (0)
 
-#define vector_reserve(vector, new_capacity) do {                         \
-                                                                          \
-    struct vector_header *metadata = vector_metadata(vector);             \
-                                                                          \
-    if (new_capacity <= metadata->capacity)                               \
-        break;                                                            \
-                                                                          \
-    void *new_memory = realloc(metadata, new_capacity * sizeof(*vector)); \
-    if (!new_memory)                                                      \
-        break;                                                            \
-                                                                          \
-    vector = vector_begin(new_memory);                                    \
-    vector_metadata(vector)->capacity = new_capacity;                     \
+#define vector_reserve(vector, new_capacity) do {                                 \
+                                                                                  \
+    struct vector_header *metadata = vector_metadata(vector);                     \
+                                                                                  \
+    if (new_capacity <= metadata->capacity)                                       \
+        break;                                                                    \
+                                                                                  \
+    void *new_memory = realloc(metadata, vector_size_for(*vector, new_capacity)); \
+    if (!new_memory)                                                              \
+        break;                                                                    \
+                                                                                  \
+    vector = vector_begin(new_memory);                                            \
+    vector_metadata(vector)->capacity = new_capacity;                             \
 } while (0)
 
 #define vector_destroy(vector) do { \
