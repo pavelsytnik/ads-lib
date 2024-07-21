@@ -77,8 +77,26 @@ struct vector_header {
 #define vector_clear(vector) \
     vector_metadata(vector)->size = 0
 
-//void vector_insert(struct vector *vec, int pos, int val);
-//void vector_push_back(struct vector *vec, int val);
-//void vector_pop_back(struct vector *vec);
+#define vector_push_back(vector, value)                              \
+do {                                                          \
+    struct vector_header *metadata = vector_metadata(vector); \
+                                                              \
+    if (metadata->capacity == 0)                              \
+        vector_reserve(vec, 8);                               \
+    else if (metadata->capacity == metadata->size)            \
+        vector_reserve(vec, 2 * metadata->capacity);          \
+                                                              \
+    vector[metadata->size++] = value;                         \
+} while (0)
+
+#define vector_pop_back(vector)                               \
+do {                                                          \
+    struct vector_header *metadata = vector_metadata(vector); \
+                                                              \
+    if (metadata->size == 0)                                  \
+        return;                                               \
+                                                              \
+    metadata->size--;                                         \
+} while (0)
 
 #endif
