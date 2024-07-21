@@ -8,6 +8,12 @@ struct vector_header {
     int capacity;
 };
 
+#define vector_metadata(vector) \
+    ((struct vector_header*)vector - 1)
+
+#define vector_begin(metadata) \
+    ((struct vector_header*)metadata + 1)
+
 #define vector_create(vector) do {                                         \
                                                                            \
     struct vector_header *metadata = malloc(sizeof(struct vector_header)); \
@@ -17,12 +23,12 @@ struct vector_header {
     metadata->size = 0;                                                    \
     metadata->capacity = 0;                                                \
                                                                            \
-    vector = ++metadata;                                                   \
+    vector = vector_begin(metadata);                                       \
 } while (0)
 
 #define vector_reserve(vector, new_capacity) do {                         \
                                                                           \
-    struct vector_header *metadata = (struct vector_header*)vector - 1;   \
+    struct vector_header *metadata = vector_metadata(vector);             \
                                                                           \
     if (new_capacity <= metadata->capacity)                               \
         break;                                                            \
@@ -31,23 +37,23 @@ struct vector_header {
     if (!new_memory)                                                      \
         break;                                                            \
                                                                           \
-    vector = (size_t)new_memory + sizeof(struct vector_header);           \
-    ((struct vector_header*)vector - 1)->capacity = new_capacity;         \
+    vector = vector_begin(new_memory);                                    \
+    vector_metadata(vector)->capacity = new_capacity;                     \
 } while (0)
 
-#define vector_destroy(vector) do {                      \
-    free((size_t)vector - sizeof(struct vector_header)); \
-    vector = NULL;                                       \
+#define vector_destroy(vector) do { \
+    free(vector_metadata(vector));  \
+    vector = NULL;                  \
 } while (0)
 
 #define vector_is_empty(vector) \
-    (((struct vector_header*)vector - 1)->size == 0)
+    (vector_metadata(vector)->size == 0)
 
 #define vector_size(vector) \
-    (((struct vector_header*)vector - 1)->size)
+    (vector_metadata(vector)->size)
 
 #define vector_capacity(vector) \
-    (((struct vector_header*)vector - 1)->capacity)
+    (vector_metadata(vector)->capacity)
 
 //void vector_shrink(struct vector *vec);
 //
