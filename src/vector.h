@@ -58,14 +58,27 @@ struct vector_header {
 #define vector_capacity(vector) \
     (vector_metadata(vector)->capacity)
 
-//void vector_shrink(struct vector *vec);
-//
-//void vector_clear(struct vector *vec);
+#define vector_shrink(vector) do {                                            \
+                                                                              \
+    struct vector_header *metadata = vector_metadata(vector);                 \
+    int size = metadata->size;                                                \
+                                                                              \
+    if (size < metadata->capacity) {                                          \
+                                                                              \
+        void *new_memory = realloc(metadata, vector_size_for(*vector, size)); \
+        if (!new_memory)                                                      \
+            break;                                                            \
+                                                                              \
+        vector = vector_begin(new_memory);                                    \
+        vector_metadata(vector)->capacity = size;                             \
+    }                                                                         \
+} while (0)
+
+#define vector_clear(vector) \
+    vector_metadata(vector)->size = 0
+
 //void vector_insert(struct vector *vec, int pos, int val);
 //void vector_push_back(struct vector *vec, int val);
 //void vector_pop_back(struct vector *vec);
-//
-//void vector_set(struct vector *vec, int pos, int val);
-//int vector_get(struct vector *vec, int pos);
 
 #endif
