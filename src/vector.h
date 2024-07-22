@@ -4,21 +4,21 @@
 #include <stdlib.h>
 
 struct vector_header {
-    int size;
-    int capacity;
+    size_t size;
+    size_t capacity;
 };
 
 #define vector_metadata(vector) \
-    ((struct vector_header*)vector - 1)
+    ((struct vector_header *) (vector) - 1)
 
 #define vector_begin(metadata) \
-    ((struct vector_header*)metadata + 1)
+    ((struct vector_header *) (metadata) + 1)
 
 #define vector_size_for(type, capacity) \
-    (sizeof(struct vector_header) + capacity * sizeof(type))
+    (sizeof(struct vector_header) + (capacity) * sizeof(type))
 
-#define vector_create(vector) do {                                         \
-                                                                           \
+#define vector_create(vector)                                              \
+do {                                                                       \
     struct vector_header *metadata = malloc(sizeof(struct vector_header)); \
     if (!metadata)                                                         \
         break;                                                             \
@@ -29,8 +29,8 @@ struct vector_header {
     vector = vector_begin(metadata);                                       \
 } while (0)
 
-#define vector_reserve(vector, new_capacity) do {                                 \
-                                                                                  \
+#define vector_reserve(vector, new_capacity)                                      \
+do {                                                                              \
     struct vector_header *metadata = vector_metadata(vector);                     \
                                                                                   \
     if (new_capacity <= metadata->capacity)                                       \
@@ -44,7 +44,8 @@ struct vector_header {
     vector_metadata(vector)->capacity = new_capacity;                             \
 } while (0)
 
-#define vector_destroy(vector) do { \
+#define vector_destroy(vector)      \
+do {                                \
     free(vector_metadata(vector));  \
     vector = NULL;                  \
 } while (0)
@@ -58,8 +59,8 @@ struct vector_header {
 #define vector_capacity(vector) \
     (vector_metadata(vector)->capacity)
 
-#define vector_shrink(vector) do {                                            \
-                                                                              \
+#define vector_shrink(vector)                                                 \
+do {                                                                          \
     struct vector_header *metadata = vector_metadata(vector);                 \
     int size = metadata->size;                                                \
                                                                               \
@@ -77,7 +78,7 @@ struct vector_header {
 #define vector_clear(vector) \
     vector_metadata(vector)->size = 0
 
-#define vector_push_back(vector, value)                              \
+#define vector_push_back(vector, value)                       \
 do {                                                          \
     struct vector_header *metadata = vector_metadata(vector); \
                                                               \
@@ -86,7 +87,7 @@ do {                                                          \
     else if (metadata->capacity == metadata->size)            \
         vector_reserve(vec, 2 * metadata->capacity);          \
                                                               \
-    vector[metadata->size++] = value;                         \
+    vector[vector_size(vector)++] = value;                         \
 } while (0)
 
 #define vector_pop_back(vector)                               \
@@ -94,7 +95,7 @@ do {                                                          \
     struct vector_header *metadata = vector_metadata(vector); \
                                                               \
     if (metadata->size == 0)                                  \
-        return;                                               \
+        break;                                                \
                                                               \
     metadata->size--;                                         \
 } while (0)
@@ -113,13 +114,8 @@ do {                                                          \
                                                               \
     metadata = vector_metadata(vector);                       \
                                                               \
-    int n = metadata->size - (index);                         \
-    int i = metadata->size;                                   \
-                                                              \
-    while (n--) {                                             \
+    for (int i = metadata->size; i != index; --i)             \
         vector[i] = vector[i - 1];                            \
-        i--;                                                  \
-    }                                                         \
                                                               \
     metadata->size++;                                         \
     vector[index] = value;                                    \
