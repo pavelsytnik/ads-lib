@@ -99,4 +99,30 @@ do {                                                          \
     metadata->size--;                                         \
 } while (0)
 
+#define vector_insert(vector, index, value)                   \
+do {                                                          \
+    struct vector_header *metadata = vector_metadata(vector); \
+                                                              \
+    if (index < 0 || index > metadata->size)                  \
+        break;                                                \
+                                                              \
+    if (metadata->capacity == 0)                              \
+        vector_reserve(vec, 8);                               \
+    else if (metadata->capacity == metadata->size)            \
+        vector_reserve(vec, 2 * metadata->capacity);          \
+                                                              \
+    metadata = vector_metadata(vector);                       \
+                                                              \
+    int n = metadata->size - (index);                         \
+    int i = metadata->size;                                   \
+                                                              \
+    while (n--) {                                             \
+        vector[i] = vector[i - 1];                            \
+        i--;                                                  \
+    }                                                         \
+                                                              \
+    metadata->size++;                                         \
+    vector[index] = value;                                    \
+} while (0)
+
 #endif
