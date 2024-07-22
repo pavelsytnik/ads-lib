@@ -11,8 +11,14 @@ struct vector_header {
 #define vector_metadata(vector) \
     ((struct vector_header *) (vector) - 1)
 
-#define vector_begin(metadata) \
+#define vector_from_metadata(metadata) \
     ((struct vector_header *) (metadata) + 1)
+
+#define vector_begin(vector) \
+    (vector)
+
+#define vector_end(vector) \
+    (&(vector)[vector_size(vector)])
 
 #define vector_size_for(type, capacity) \
     (sizeof(struct vector_header) + (capacity) * sizeof(type))
@@ -26,7 +32,7 @@ do {                                                                       \
     metadata->size = 0;                                                    \
     metadata->capacity = 0;                                                \
                                                                            \
-    vector = vector_begin(metadata);                                       \
+    vector = vector_from_metadata(metadata);                               \
 } while (0)
 
 #define vector_reserve(vector, new_capacity)                                      \
@@ -40,7 +46,7 @@ do {                                                                            
     if (!new_memory)                                                              \
         break;                                                                    \
                                                                                   \
-    vector = vector_begin(new_memory);                                            \
+    vector = vector_from_metadata(new_memory);                                    \
     vector_metadata(vector)->capacity = new_capacity;                             \
 } while (0)
 
@@ -70,7 +76,7 @@ do {                                                                          \
         if (!new_memory)                                                      \
             break;                                                            \
                                                                               \
-        vector = vector_begin(new_memory);                                    \
+        vector = vector_from_metadata(new_memory);                            \
         vector_metadata(vector)->capacity = size;                             \
     }                                                                         \
 } while (0)
@@ -87,7 +93,7 @@ do {                                                          \
     else if (metadata->capacity == metadata->size)            \
         vector_reserve(vec, 2 * metadata->capacity);          \
                                                               \
-    vector[vector_size(vector)++] = value;                         \
+    vector[vector_size(vector)++] = value;                    \
 } while (0)
 
 #define vector_pop_back(vector)                               \
