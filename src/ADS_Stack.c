@@ -1,16 +1,16 @@
 #include <stdlib.h>
 
-#include "stack.h"
+#include "ADS_Stack.h"
 
-struct stack {
+struct ADS_Stack {
     int *array;
     int size;
     int capacity;
 };
 
-struct stack *stack_create()
+ADS_Stack *ADS_Stack_Create()
 {
-    struct stack *stck = malloc(sizeof(struct stack));
+    ADS_Stack *stck = malloc(sizeof(ADS_Stack));
     if (!stck)
         return NULL;
 
@@ -21,33 +21,33 @@ struct stack *stack_create()
     return stck;
 }
 
-void stack_destroy(struct stack *stck)
+void ADS_Stack_Destroy(ADS_Stack *stck)
 {
     free(stck->array);
     free(stck);
 }
 
-int stack_is_empty(struct stack *stck)
+int ADS_Stack_IsEmpty(ADS_Stack *stck)
 {
     return stck->size == 0;
 }
 
-int stack_size(struct stack *stck)
+int ADS_Stack_Size(ADS_Stack *stck)
 {
     return stck->size;
 }
 
-int stack_capacity(struct stack *stck)
+int ADS_Stack_Capacity(ADS_Stack *stck)
 {
     return stck->capacity;
 }
 
-void stack_reserve(struct stack *stck, int new_cap)
+void ADS_Stack_Reserve(ADS_Stack *stck, int new_cap)
 {
     if (new_cap <= stck->capacity)
         return;
 
-    int *new_array = realloc(stck->array, new_cap * sizeof(struct stack));
+    int *new_array = realloc(stck->array, new_cap * sizeof(ADS_Stack));
     if (!new_array)
         return;
 
@@ -55,7 +55,7 @@ void stack_reserve(struct stack *stck, int new_cap)
     stck->capacity = new_cap;
 }
 
-void stack_shrink(struct stack *stck)
+void ADS_Stack_Shrink(ADS_Stack *stck)
 {
     if (stck->size == stck->capacity)
         return;
@@ -67,7 +67,7 @@ void stack_shrink(struct stack *stck)
         free(stck->array);
 
     } else {
-        new_mem = realloc(stck->array, stck->size * sizeof(struct stack));
+        new_mem = realloc(stck->array, stck->size * sizeof(ADS_Stack));
         if (!new_mem)
             return;
     }
@@ -76,23 +76,23 @@ void stack_shrink(struct stack *stck)
     stck->capacity = stck->size;
 }
 
-void stack_clear(struct stack *stck)
+void ADS_Stack_Clear(ADS_Stack *stck)
 {
     stck->size == 0;
 }
 
-void stack_push(struct stack *stck, int val)
+void ADS_Stack_Push(ADS_Stack *stck, int val)
 {
     if (stck->capacity == 0)
-        stack_reserve(stck, 8);
+        ADS_Stack_Reserve(stck, 8);
     else if (stck->capacity == stck->size)
-        stack_reserve(stck, 2 * stck->capacity);
+        ADS_Stack_Reserve(stck, 2 * stck->capacity);
 
     stck->array[stck->size] = val;
     stck->size++;
 }
 
-int stack_pop(struct stack *stck)
+int ADS_Stack_Pop(ADS_Stack *stck)
 {
     if (stck->size == 0)
         return;
@@ -100,7 +100,7 @@ int stack_pop(struct stack *stck)
     return stck->array[stck->size-- - 1];
 }
 
-int stack_peek(struct stack *stck)
+int ADS_Stack_Peek(ADS_Stack *stck)
 {
     return stck->array[stck->size - 1];
 }

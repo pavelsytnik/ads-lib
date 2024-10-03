@@ -1,16 +1,16 @@
 #include <stdlib.h>
 
-#include "vector.h"
+#include "ADS_Vector.h"
 
-struct vector {
+struct ADS_Vector {
     int *array;
     int size;
     int capacity;
 };
 
-struct vector *vector_create()
+ADS_Vector *ADS_Vector_Create()
 {
-    struct vector *vec = malloc(sizeof(struct vector));
+    ADS_Vector *vec = malloc(sizeof(ADS_Vector));
     vec->array = NULL;
     vec->size = 0;
     vec->capacity = 0;
@@ -18,33 +18,33 @@ struct vector *vector_create()
     return vec;
 }
 
-void vector_destroy(struct vector *vec)
+void ADS_Vector_Destroy(ADS_Vector *vec)
 {
     free(vec->array);
     free(vec);
 }
 
-int vector_is_empty(struct vector *vec)
+int ADS_Vector_IsEmpty(ADS_Vector *vec)
 {
     return vec->size == 0;
 }
 
-int vector_size(struct vector *vec)
+int ADS_Vector_Size(ADS_Vector *vec)
 {
     return vec->size;
 }
 
-int vector_capacity(struct vector *vec)
+int ADS_Vector_Capacity(ADS_Vector *vec)
 {
     return vec->capacity;
 }
 
-void vector_reserve(struct vector *vec, int new_cap)
+void ADS_Vector_Reserve(ADS_Vector *vec, int new_cap)
 {
     if (new_cap <= vec->capacity)
         return;
 
-    int *new_array = realloc(vec->array, new_cap * sizeof(struct vector));
+    int *new_array = realloc(vec->array, new_cap * sizeof(ADS_Vector));
     if (!new_array)
         return;
 
@@ -52,7 +52,7 @@ void vector_reserve(struct vector *vec, int new_cap)
     vec->capacity = new_cap;
 }
 
-void vector_shrink(struct vector *vec)
+void ADS_Vector_Shrink(ADS_Vector *vec)
 {
     if (vec->size == vec->capacity)
         return;
@@ -64,7 +64,7 @@ void vector_shrink(struct vector *vec)
         free(vec->array);
 
     } else {
-        new_mem = realloc(vec->array, vec->size * sizeof(struct vector));
+        new_mem = realloc(vec->array, vec->size * sizeof(ADS_Vector));
         if (!new_mem)
             return;
     }
@@ -73,23 +73,23 @@ void vector_shrink(struct vector *vec)
     vec->capacity = vec->size;
 }
 
-void vector_clear(struct vector *vec)
+void ADS_Vector_Clear(ADS_Vector *vec)
 {
     vec->size = 0;
 }
 
-void vector_push_back(struct vector *vec, int val)
+void ADS_Vector_PushBack(ADS_Vector *vec, int val)
 {
     if (vec->capacity == 0)
-        vector_reserve(vec, 8);
+        ADS_Vector_Reserve(vec, 8);
     else if (vec->capacity == vec->size)
-        vector_reserve(vec, 2 * vec->capacity);
+        ADS_Vector_Reserve(vec, 2 * vec->capacity);
 
     vec->array[vec->size] = val;
     vec->size++;
 }
 
-void vector_pop_back(struct vector *vec)
+void ADS_Vector_PopBack(ADS_Vector *vec)
 {
     if (vec->size == 0)
         return;
@@ -97,7 +97,7 @@ void vector_pop_back(struct vector *vec)
     vec->size--;
 }
 
-void vector_set(struct vector *vec, int pos, int val)
+void ADS_Vector_Set(ADS_Vector *vec, int pos, int val)
 {
     if (pos < 0 || pos >= vec->size)
         return;
@@ -105,7 +105,7 @@ void vector_set(struct vector *vec, int pos, int val)
     vec->array[pos] = val;
 }
 
-int vector_get(struct vector *vec, int pos)
+int ADS_Vector_Get(ADS_Vector *vec, int pos)
 {
     if (pos < 0 || pos >= vec->size)
         return;
