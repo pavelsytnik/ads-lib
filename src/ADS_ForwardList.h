@@ -56,48 +56,61 @@
 }                                             \
 while (0)
 
-#define ADS_ForwardList_PushFront(list, val) do   \
-{                                                 \
-    ADS_ForwardListNode_New((val), (list)->head); \
-}                                                 \
+#define ADS_ForwardList_PushFront(list, val) do                              \
+{                                                                            \
+    ADS_ForwardList_InsertAfter(ADS_ForwardList_BeforeBegin((list)), (val)); \
+}                                                                            \
 while (0)
 
-#define ADS_ForwardList_PopFront(list) do                 \
-{                                                         \
-    void *new_head = ADS_ForwardList_Begin((list))->next; \
-    free(ADS_ForwardList_Begin((list)));                  \
-    ADS_ForwardList_Begin((list)) = new_head;             \
-}                                                         \
+#define ADS_ForwardList_PopFront(list) do                            \
+{                                                                    \
+    ADS_ForwardList_EraseAfter(ADS_ForwardList_BeforeBegin((list))); \
+}                                                                    \
 while (0)
 
-#define ADS_ForwardList_Clear(list) do                    \
-{                                                         \
-    while (!ADS_ForwardList_IsEmpty((list))) {            \
-        void *next = ADS_ForwardList_Begin((list))->next; \
-        free(ADS_ForwardList_Begin((list)));              \
-        ADS_ForwardList_Begin((list)) = next;             \
-    }                                                     \
-}                                                         \
+#define ADS_ForwardList_Clear(list) do       \
+{                                            \
+    while (!ADS_ForwardList_IsEmpty((list))) \
+        ADS_ForwardList_PopFront((list));    \
+}                                            \
 while (0)
 
 #define ADS_ForwardList_Reverse(list) do            \
 {                                                   \
     void *prev = NULL;                              \
     void *next = NULL;                              \
-                                         \
+                                                    \
     while (ADS_ForwardList_Begin((list))) {         \
         next = ADS_ForwardList_Begin((list))->next; \
         ADS_ForwardList_Begin((list))->next = prev; \
         prev = ADS_ForwardList_Begin((list));       \
         ADS_ForwardList_Begin((list)) = next;       \
     }                                               \
-                                         \
+                                                    \
     ADS_ForwardList_Begin((list)) = prev;           \
 }                                                   \
 while (0)
 
-/* Temporarily deleted */
-//void ADS_ForwardList_Erase(ADS_ForwardList *list, int pos);
-//void ADS_ForwardList_Insert(ADS_ForwardList *list, int pos, int val);
+#define ADS_ForwardList_Node(list, pos, node) do \
+{                                                \
+    (node) = ADS_ForwardList_Begin((list));      \
+    for (int i = 0; i < (pos); i++)              \
+        (node) = (node)->next;                   \
+}                                                \
+while (0)
+
+#define ADS_ForwardList_InsertAfter(node, val) do \
+{                                                 \
+    ADS_ForwardListNode_New((val), (node)->next); \
+}                                                 \
+while (0)
+
+#define ADS_ForwardList_EraseAfter(node) do \
+{                                           \
+    void *new_next = (node)->next->next;    \
+    free((node)->next);                     \
+    (node)->next = new_next;                \
+}                                           \
+while (0)
 
 #endif
