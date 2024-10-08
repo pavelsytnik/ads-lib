@@ -9,7 +9,7 @@ ADS_FORWARD_LIST_DEFINE(double, Double)
 
 void foo(void)
 {
-    ADS_ForwardList(Double) list = ADS_ForwardList_Create();
+    ADS_ForwardList(Double) list = ADS_ForwardList_Init();
 
     ADS_ForwardList_PushFront(&list, 1.);
     ADS_ForwardList_PushFront(&list, 2.);
