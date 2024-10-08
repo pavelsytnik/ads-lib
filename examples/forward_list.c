@@ -19,8 +19,8 @@ void foo(void)
 
     ADS_ForwardList_Reverse(&list);
 
-    for (ADS_ForwardListNode(Double) *node = ADS_ForwardList_Front(&list);
-         node;
+    for (ADS_ForwardListNode(Double) *node = ADS_ForwardList_Begin(&list);
+         node != ADS_ForwardList_End();
          node = node->next)
     {
         printf("Value: %f\n", node->value);

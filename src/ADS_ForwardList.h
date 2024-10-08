@@ -10,9 +10,14 @@
                                                     \
     ADS_TYPEDEF_STRUCT(ADS_ForwardList(prefix))     \
     ADS_TYPEDEF_STRUCT(ADS_ForwardListNode(prefix)) \
+    ADS_TYPEDEF_STRUCT(ADS_ForwardListHead(prefix)) \
+                                                    \
+    struct ADS_ForwardListHead(prefix) {            \
+        ADS_ForwardListNode(prefix) *next;          \
+    };                                              \
                                                     \
     struct ADS_ForwardList(prefix) {                \
-        ADS_ForwardListNode(prefix) *head;          \
+        ADS_ForwardListHead(prefix) head;           \
     };                                              \
                                                     \
     struct ADS_ForwardListNode(prefix) {            \
@@ -20,16 +25,27 @@
         ADS_ForwardListNode(prefix) *next;          \
     };
 
-#define ADS_ForwardList(prefix)     ADS_##prefix##ForwardList
-#define ADS_ForwardListNode(prefix) ADS_##prefix##ForwardListNode
+#define ADS_ForwardList(prefix)     ADS_##prefix##_ForwardList
+#define ADS_ForwardListNode(prefix) ADS_##prefix##_ForwardListNode
+#define ADS_ForwardListHead(prefix) ADS_##prefix##_ForwardListHead
 
-#define ADS_ForwardList_Create() { NULL }
+#define ADS_ForwardList_Create() \
+    { { NULL } }
 
 #define ADS_ForwardList_IsEmpty(list) \
-    (!(list)->head)
+    (!(list)->head.next)
 
 #define ADS_ForwardList_Front(list) \
-    ((list)->head)
+    (*(list)->head.next)
+
+#define ADS_ForwardList_BeforeBegin(list) \
+    (&(list)->head)
+
+#define ADS_ForwardList_Begin(list) \
+    ((list)->head.next)
+
+#define ADS_ForwardList_End() \
+    NULL
 
 #define ADS_ForwardListNode_New(val, node) do \
 {                                             \
@@ -46,38 +62,38 @@ while (0)
 }                                                 \
 while (0)
 
-#define ADS_ForwardList_PopFront(list) do \
-{                                         \
-    void *new_head = (list)->head->next;  \
-    free((list)->head);                   \
-    (list)->head = new_head;              \
-}                                         \
+#define ADS_ForwardList_PopFront(list) do                 \
+{                                                         \
+    void *new_head = ADS_ForwardList_Begin((list))->next; \
+    free(ADS_ForwardList_Begin((list)));                  \
+    ADS_ForwardList_Begin((list)) = new_head;             \
+}                                                         \
 while (0)
 
-#define ADS_ForwardList_Clear(list) do   \
-{                                        \
-    while ((list)->head) {               \
-        void *next = (list)->head->next; \
-        free((list)->head);              \
-        (list)->head = next;             \
-    }                                    \
-}                                        \
+#define ADS_ForwardList_Clear(list) do                    \
+{                                                         \
+    while (!ADS_ForwardList_IsEmpty((list))) {            \
+        void *next = ADS_ForwardList_Begin((list))->next; \
+        free(ADS_ForwardList_Begin((list)));              \
+        ADS_ForwardList_Begin((list)) = next;             \
+    }                                                     \
+}                                                         \
 while (0)
 
-#define ADS_ForwardList_Reverse(list) do \
-{                                        \
-    void *prev = NULL;                   \
-    void *next = NULL;                   \
+#define ADS_ForwardList_Reverse(list) do            \
+{                                                   \
+    void *prev = NULL;                              \
+    void *next = NULL;                              \
                                          \
-    while ((list)->head) {               \
-        next = (list)->head->next;       \
-        (list)->head->next = prev;       \
-        prev = (list)->head;             \
-        (list)->head = next;             \
-    }                                    \
+    while (ADS_ForwardList_Begin((list))) {         \
+        next = ADS_ForwardList_Begin((list))->next; \
+        ADS_ForwardList_Begin((list))->next = prev; \
+        prev = ADS_ForwardList_Begin((list));       \
+        ADS_ForwardList_Begin((list)) = next;       \
+    }                                               \
                                          \
-    (list)->head = prev;                 \
-}                                        \
+    ADS_ForwardList_Begin((list)) = prev;           \
+}                                                   \
 while (0)
 
 /* Temporarily deleted */
