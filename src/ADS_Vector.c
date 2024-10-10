@@ -1,114 +1,43 @@
-#include <stdlib.h>
-
 #include "ADS_Vector.h"
 
-struct ADS_Vector {
-    int *array;
-    int size;
-    int capacity;
-};
+#define ADS_SizeOfVector(elem_sz, cap) \
+    (sizeof(ADS_VectorHeader) + (cap) * (elem_sz))
 
-ADS_Vector *ADS_Vector_Create()
+ADS_Vector(void) ADS_Vector_Init(void)
 {
-    ADS_Vector *vec = malloc(sizeof(ADS_Vector));
-    vec->array = NULL;
-    vec->size = 0;
-    vec->capacity = 0;
-
-    return vec;
+    ADS_VectorHeader *head = malloc(sizeof(ADS_VectorHeader));
+    head->size = 0;
+    head->capacity = 0;
+    return ADS_HeaderToVector(head);
 }
 
-void ADS_Vector_Destroy(ADS_Vector *vec)
+void ADS_Vector_Free(ADS_Vector(void) *vec)
 {
-    free(vec->array);
-    free(vec);
+    free(ADS_VectorToHeader(vec));
+    *vec = NULL;
 }
 
-int ADS_Vector_IsEmpty(ADS_Vector *vec)
+void ADS_Vector_Clear(ADS_Vector(void) *vec)
 {
-    return vec->size == 0;
+    ADS_VectorToHeader(vec)->size = 0;
 }
 
-int ADS_Vector_Size(ADS_Vector *vec)
+void ADS_Vector_Resize_Impl(ADS_Vector(void) *vec, size_t elem_sz, size_t cap)
 {
-    return vec->size;
-}
+    ADS_VectorHeader *head;
+    ADS_VectorHeader *new_mem;
 
-int ADS_Vector_Capacity(ADS_Vector *vec)
-{
-    return vec->capacity;
-}
-
-void ADS_Vector_Reserve(ADS_Vector *vec, int new_cap)
-{
-    if (new_cap <= vec->capacity)
+    if (cap == ADS_Vector_Capacity(vec))
         return;
 
-    int *new_array = realloc(vec->array, new_cap * sizeof(ADS_Vector));
-    if (!new_array)
-        return;
+    head = ADS_VectorToHeader(vec);
+    new_mem = realloc(head, ADS_SizeOfVector(elem_sz, cap));
 
-    vec->array = new_array;
-    vec->capacity = new_cap;
+    *vec = ADS_HeaderToVector(new_mem);
+    ADS_Vector_Capacity(vec) = cap; /* `head` is invalidated here */
 }
 
-void ADS_Vector_Shrink(ADS_Vector *vec)
+void ADS_Vector_PopBack(ADS_Vector(void) *vec)
 {
-    if (vec->size == vec->capacity)
-        return;
-
-    int *new_mem;
-
-    if (vec->size == 0) {
-        new_mem = NULL;
-        free(vec->array);
-
-    } else {
-        new_mem = realloc(vec->array, vec->size * sizeof(ADS_Vector));
-        if (!new_mem)
-            return;
-    }
-
-    vec->array = new_mem;
-    vec->capacity = vec->size;
-}
-
-void ADS_Vector_Clear(ADS_Vector *vec)
-{
-    vec->size = 0;
-}
-
-void ADS_Vector_PushBack(ADS_Vector *vec, int val)
-{
-    if (vec->capacity == 0)
-        ADS_Vector_Reserve(vec, 8);
-    else if (vec->capacity == vec->size)
-        ADS_Vector_Reserve(vec, 2 * vec->capacity);
-
-    vec->array[vec->size] = val;
-    vec->size++;
-}
-
-void ADS_Vector_PopBack(ADS_Vector *vec)
-{
-    if (vec->size == 0)
-        return;
-
-    vec->size--;
-}
-
-void ADS_Vector_Set(ADS_Vector *vec, int pos, int val)
-{
-    if (pos < 0 || pos >= vec->size)
-        return;
-
-    vec->array[pos] = val;
-}
-
-int ADS_Vector_Get(ADS_Vector *vec, int pos)
-{
-    if (pos < 0 || pos >= vec->size)
-        return;
-
-    return vec->array[pos];
+    ADS_Vector_Size(vec)--;
 }
